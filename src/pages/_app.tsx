@@ -1,16 +1,28 @@
-import AppLayout from "@/components/AppLayout";
-import { NextUIProvider } from "@nextui-org/react";
+import AppLayout from "@/common/components/AppLayout";
+import { createTheme, NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import type { AppProps } from "next/app";
+import { useSSR } from "@nextui-org/react";
+import "@/assets/global.css";
 
+const darkTheme = createTheme({
+  type: "dark",
+  theme: {
+    colors: {},
+  },
+});
 export default function App({ Component, pageProps }: AppProps) {
+  const { isBrowser } = useSSR();
   return (
-    <NextThemesProvider defaultTheme="dark" attribute="class">
-      <NextUIProvider>
-        <AppLayout />
-        <Component {...pageProps} />
-      </NextUIProvider>
-    </NextThemesProvider>
+    isBrowser && (
+      <NextThemesProvider defaultTheme="dark" attribute="class">
+        <NextUIProvider theme={darkTheme}>
+          {/* <NextUIProvider> */}
+          <AppLayout />
+          <Component {...pageProps} />
+        </NextUIProvider>
+      </NextThemesProvider>
+    )
   );
 }
 // https://fakeapi.platzi.com/
